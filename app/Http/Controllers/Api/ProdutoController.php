@@ -22,9 +22,14 @@ class ProdutoController extends Controller
         $this->produto = $produto;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return new ProdutoCollection($this->produto::paginate());
+        $produto = $this->produto;
+        if ($request->has('fields')) {
+            $fields = $request->get('fields');
+            $produto = $produto->selectRaw($fields);
+        }
+        return new ProdutoCollection($produto->paginate(10));
     }
 
     public function show($id)

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProdutoCollection;
 use App\Http\Resources\ProdutoResource;
 use App\Models\Produto;
+use App\Repository\ProdutoRepository;
 use App\Utils\ApiError;
 use Illuminate\Http\Request;
 
@@ -25,11 +26,17 @@ class ProdutoController extends Controller
     public function index(Request $request)
     {
         $produto = $this->produto;
-        if ($request->has('fields')) {
-            $fields = $request->get('fields');
-            $produto = $produto->selectRaw($fields);
+        $produtoRepository = new ProdutoRepository($produto);
+
+        if ($request->has('coditions')) {
+            $produtoRepository->selectCoditions($request->get('coditions'));
         }
-        return new ProdutoCollection($produto->paginate(10));
+
+        if ($request->has('fields')) {
+            $produtoRepository->selectFilter($request->get('fields'));
+        }
+
+        return new ProdutoCollection($produtoRepository->getResult()->paginate(10));
     }
 
     public function show($id)

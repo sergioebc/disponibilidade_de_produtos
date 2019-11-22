@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProdutoCollection;
+use App\Http\Resources\ProdutoResource;
 use App\Models\Produto;
 use App\Utils\ApiError;
 use Illuminate\Http\Request;
@@ -22,7 +24,7 @@ class ProdutoController extends Controller
 
     public function index()
     {
-        return response()->json($this->produto->paginate(10));
+        return new ProdutoCollection($this->produto::paginate());
     }
 
     public function show($id)
@@ -31,8 +33,7 @@ class ProdutoController extends Controller
 
         if (!$produto) return response()->json(ApiError::errorMessage('Produto não encontrado!', 4040), 404);
 
-        $data = ['data' => $produto];
-        return response()->json($data);
+        return new ProdutoResource($produto);
     }
 
     public function store(Request $request)

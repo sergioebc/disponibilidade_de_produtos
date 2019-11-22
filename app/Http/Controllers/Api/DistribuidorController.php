@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\DistribuidorCollection;
+use App\Http\Resources\DistribuidorResource;
 use App\Models\Distribuidor;
 use App\Utils\ApiError;
 use Illuminate\Http\Request;
@@ -22,7 +24,7 @@ class DistribuidorController extends Controller
 
     public function index()
     {
-        return response()->json($this->distribuidor->paginate(10));
+        return new DistribuidorCollection($this->distribuidor::paginate());
     }
 
     public function show($id)
@@ -31,8 +33,7 @@ class DistribuidorController extends Controller
 
         if (!$distribuidor) return response()->json(ApiError::errorMessage('Distribuidor não encontrado!', 4040), 404);
 
-        $data = ['data' => $distribuidor];
-        return response()->json($data);
+        return new DistribuidorResource($distribuidor);
     }
 
     public function store(Request $request)

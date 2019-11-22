@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProdutoRequest;
 use App\Http\Resources\ProdutoCollection;
 use App\Http\Resources\ProdutoResource;
 use App\Models\Produto;
@@ -48,10 +49,9 @@ class ProdutoController extends Controller
         return new ProdutoResource($produto);
     }
 
-    public function store(Request $request)
+    public function store(ProdutoRequest $request)
     {
         try {
-
             $produtoData = $request->all();
             $produto = $this->produto->create($produtoData);
 
@@ -65,10 +65,9 @@ class ProdutoController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(ProdutoRequest $request, $id)
     {
         try {
-
             $produtoData = $request->all();
             $produto     = $this->produto->find($id);
             $produto->update($produtoData);
@@ -86,7 +85,6 @@ class ProdutoController extends Controller
     public function delete($id)
     {
         try {
-
             $produto = $this->produto->find($id);
 
             if (!$produto) return response()->json(ApiError::errorMessage('Produto não encontrado!', 4040), 404);

@@ -21,11 +21,23 @@ Route::namespace('API')->name('api.')->group(function(){
 	Route::prefix('produtos')->group(function(){
 
 		Route::get('/', 'ProdutoController@index')->name('index_produtos');
-		Route::get('/{id}', 'ProdutoController@show')->name('single_produto');
+		Route::get('/{id}', 'ProdutoController@show')->name('single_produtos');
 
 		Route::post('/', 'ProdutoController@store')->name('store_produtos');
-		Route::put('/{id}', 'ProdutoController@update')->name('update_produto');
+		Route::put('/{id}', 'ProdutoController@update')->name('update_produtos');
 
-		Route::delete('/{id}', 'ProdutoController@delete')->name('delete_produto');
-	});
+		Route::delete('/{id}', 'ProdutoController@delete')->name('delete_produtos');
+    });
+
+    Route::prefix('distribuidores')->group(function(){
+
+		Route::get('/', 'DistribuidorController@index')->name('index_distribuidores');
+		Route::get('/{id}', 'DistribuidorController@show')->name('single_distribuidores');
+
+		Route::post('/', 'DistribuidorController@store')->name('store_distribuidores');
+		Route::put('/{id}', 'DistribuidorController@update')->name('update_distribuidores');
+
+		Route::delete('/{id}', 'DistribuidorController@delete')->name('delete_distribuidores');
+    });
+
 });

@@ -47,9 +47,9 @@ class DistribuidorController extends Controller
             return response()->json($data, 201);
         } catch (\Exception $e) {
             if (config('app.debug')) {
-                return response()->json(ApiError::errorMessage($e->getMessage(), 1010), 500);
+                return response()->json(ApiError::errorMessage($e->getMessage(), 5000), 500);
             }
-            return response()->json(ApiError::errorMessage('Houve um erro ao tentar salvar o distribuidor', 1010),  500);
+            return response()->json(ApiError::errorMessage('Houve um erro ao tentar salvar o distribuidor', 5000),  500);
         }
     }
 
@@ -68,9 +68,9 @@ class DistribuidorController extends Controller
             return response()->json($data, 201);
         } catch (\Exception $e) {
             if (config('app.debug')) {
-                return response()->json(ApiError::errorMessage($e->getMessage(), 1011),  500);
+                return response()->json(ApiError::errorMessage($e->getMessage(), 5000),  500);
             }
-            return response()->json(ApiError::errorMessage('Houve um erro ao tentar atualizar o distribuidor', 1011), 500);
+            return response()->json(ApiError::errorMessage('Houve um erro ao tentar atualizar o distribuidor', 5000), 500);
         }
     }
 
@@ -87,9 +87,9 @@ class DistribuidorController extends Controller
             return response()->json(['data' => ['msg' => 'Distribuidor: ' . $distribuidor->nome_fantasia . ' removido com sucesso!']], 200);
         } catch (\Exception $e) {
             if (config('app.debug')) {
-                return response()->json(ApiError::errorMessage($e->getMessage(), 1012),  500);
+                return response()->json(ApiError::errorMessage($e->getMessage(), 5000),  500);
             }
-            return response()->json(ApiError::errorMessage('Houve um erro ao tentar remover', 1012),  500);
+            return response()->json(ApiError::errorMessage('Houve um erro ao tentar remover', 5000),  500);
         }
     }
 }

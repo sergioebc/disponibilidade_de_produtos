@@ -59,9 +59,9 @@ class ProdutoController extends Controller
             return response()->json($data, 201);
         } catch (\Exception $e) {
             if (config('app.debug')) {
-                return response()->json(ApiError::errorMessage($e->getMessage(), 1010), 500);
+                return response()->json(ApiError::errorMessage($e->getMessage(), 5000), 500);
             }
-            return response()->json(ApiError::errorMessage('Houve um erro ao tentar salvar o produto', 1010),  500);
+            return response()->json(ApiError::errorMessage('Houve um erro ao tentar salvar o produto', 5000),  500);
         }
     }
 
@@ -69,16 +69,16 @@ class ProdutoController extends Controller
     {
         try {
             $produtoData = $request->all();
-            $produto     = $this->produto->find($id);
+            $produto     = $this->produto->findOrFail($id);
             $produto->update($produtoData);
 
             $data = ['data' => $produto];
             return response()->json($data, 201);
         } catch (\Exception $e) {
             if (config('app.debug')) {
-                return response()->json(ApiError::errorMessage($e->getMessage(), 1011),  500);
+                return response()->json(ApiError::errorMessage($e->getMessage(), 5000),  500);
             }
-            return response()->json(ApiError::errorMessage('Houve um erro ao tentar atualizar o produto', 1011), 500);
+            return response()->json(ApiError::errorMessage('Houve um erro ao tentar atualizar o produto', 5000), 500);
         }
     }
 
@@ -94,9 +94,9 @@ class ProdutoController extends Controller
             return response()->json(['data' => ['msg' => 'Produto: ' . $produto->nome . ' removido com sucesso!']], 200);
         } catch (\Exception $e) {
             if (config('app.debug')) {
-                return response()->json(ApiError::errorMessage($e->getMessage(), 1012),  500);
+                return response()->json(ApiError::errorMessage($e->getMessage(), 5000),  500);
             }
-            return response()->json(ApiError::errorMessage('Houve um erro ao tentar remover', 1012),  500);
+            return response()->json(ApiError::errorMessage('Houve um erro ao tentar remover', 5000),  500);
         }
     }
 }

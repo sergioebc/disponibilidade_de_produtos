@@ -22,10 +22,8 @@ Route::namespace('API')->name('api.')->group(function(){
 
 		Route::get('/', 'ProdutoController@index')->name('index_produtos');
 		Route::get('/{id}', 'ProdutoController@show')->name('single_produtos');
-
 		Route::post('/', 'ProdutoController@store')->name('store_produtos');//->middleware('auth.basic');
 		Route::put('/{id}', 'ProdutoController@update')->name('update_produtos');
-
 		Route::delete('/{id}', 'ProdutoController@delete')->name('delete_produtos');
     });
 
@@ -33,11 +31,14 @@ Route::namespace('API')->name('api.')->group(function(){
 
 		Route::get('/', 'DistribuidorController@index')->name('index_distribuidores');
 		Route::get('/{id}', 'DistribuidorController@show')->name('single_distribuidores');
-
 		Route::post('/', 'DistribuidorController@store')->name('store_distribuidores');
 		Route::put('/{id}', 'DistribuidorController@update')->name('update_distribuidores');
-
 		Route::delete('/{id}', 'DistribuidorController@delete')->name('delete_distribuidores');
+    });
+
+    Route::name('users.')->group(function(){
+
+        Route::resource('users', 'UserController');
     });
 
 });

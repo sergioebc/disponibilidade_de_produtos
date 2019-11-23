@@ -17,7 +17,8 @@ class DistribuidorResource extends JsonResource
         return [
             'razao_social' => $this->razao_social,
             'nome_fantasia' => $this->nome_fantasia,
-            'cnpj' => $this->cnpj
+            'cnpj' => $this->cnpj,
+            'user_id' => $this->user_id
         ];
         }
     }

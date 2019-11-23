@@ -15,10 +15,14 @@ class CreateDistribuidorsTable extends Migration
     {
         Schema::create('distribuidors', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedBigInteger('user_id');
             $table->string('razao_social');
             $table->string('nome_fantasia');
             $table->string('cnpj');
+
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

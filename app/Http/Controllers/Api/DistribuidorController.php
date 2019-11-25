@@ -92,4 +92,37 @@ class DistribuidorController extends Controller
             return response()->json(ApiError::errorMessage('Houve um erro ao tentar remover', 5000),  500);
         }
     }
+
+
+    public function store_produtos(Request $request, $id)
+    {
+        $data = $request->all();
+        try {
+            $distribuidor = $this->distribuidor->findOrFail($id);
+
+            foreach ($data as $key => &$value) {
+                $value['distribuidor_id'] = $id;
+            }
+
+
+            if (count($data)) {
+                $distribuidor->produtos()->sync($data);
+            }
+
+            // return response()->json([$distribuidor->produtos]);
+
+            return response()->json([
+                'data' => [
+                    'msg' => 'Produtos cadastrados com sucesso!'
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            if (config('app.debug')) {
+                return response()->json(ApiError::errorMessage($e->getMessage(), 5000), 500);
+            }
+            return response()->json(ApiError::errorMessage('Houve um erro ao tentar salvar os produtos do distribuidor', 5000),  500);
+        }
+    }
+
 }

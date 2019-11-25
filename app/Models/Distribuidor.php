@@ -9,4 +9,10 @@ class Distribuidor extends Model
     protected $fillable = [
 		'razao_social', 'nome_fantasia', 'cnpj', 'user_id'
     ];
+
+    public function produtos()
+    {
+    	return $this->belongsToMany(Produto::class, 'produto_distribuidor');
+    }
 }
+

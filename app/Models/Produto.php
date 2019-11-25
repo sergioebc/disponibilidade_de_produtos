@@ -9,4 +9,9 @@ class Produto extends Model
     protected $fillable = [
 		'nome', 'codigo_de_barras', 'descricao'
     ];
+
+    public function distribuidors()
+    {
+    	return $this->belongsToMany(Distribuidor::class, 'produto_distribuidor');
+    }
 }

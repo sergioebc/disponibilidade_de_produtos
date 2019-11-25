@@ -33,7 +33,9 @@ Route::namespace('API')->name('api.')->group(function(){
 		Route::get('/{id}', 'DistribuidorController@show')->name('single_distribuidores');
 		Route::post('/', 'DistribuidorController@store')->name('store_distribuidores');
 		Route::put('/{id}', 'DistribuidorController@update')->name('update_distribuidores');
-		Route::delete('/{id}', 'DistribuidorController@delete')->name('delete_distribuidores');
+        Route::delete('/{id}', 'DistribuidorController@delete')->name('delete_distribuidores');
+
+        Route::post('/{id}/produtos', 'DistribuidorController@store_produtos')->name('store_distribuidores_produtos');
     });
 
     Route::name('users.')->group(function(){

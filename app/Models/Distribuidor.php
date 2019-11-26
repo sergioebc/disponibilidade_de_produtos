@@ -30,4 +30,10 @@ class Distribuidor extends Model
             ->wherePivot('em_estoque', true)
             ->withPivot('preco', 'em_estoque');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

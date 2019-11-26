@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Utils\ApiError;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -41,9 +42,22 @@ class UserController extends Controller
             return response()->json(ApiError::errorMessage('Senha obrigatória', 4010),  401);
         }
 
+        Validator::make($userData, [
+            'razao_social' => 'required',
+            'nome_fantasia' => 'required',
+            'cnpj' => 'required'
+        ])->validate();
+
         try {
             $userData['password'] = bcrypt($userData['password']);
             $user = $this->user->create($userData);
+            $user =  $user->distribuidor()->create(
+                [
+                    'razao_social' => $userData['razao_social'],
+                    'nome_fantasia' => $userData['nome_fantasia'],
+                    'cnpj' => $userData['cnpj']
+                ]
+            );
 
             $data = ['data' => $user];
             return response()->json($data, 201);
@@ -63,7 +77,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = $this->user->find($id);
+        $user = $this->user->with( 'distribuidor')->findOrFail($id);
 
         if (!$user) return response()->json(ApiError::errorMessage('User não encontrado!', 4040), 404);
 

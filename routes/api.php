@@ -45,4 +45,10 @@ Route::namespace('API')->name('api.')->group(function(){
         Route::resource('users', 'UserController');
     });
 
+    Route::name('imagens.')->prefix('imagens')->group(function(){
+        Route::delete('/{id}', 'ImagemController@remove')->name('delete');
+
+        Route::put('/set-thumb/{photoId}/{realStateId}', 'ImagemController@setThumb')->name('update');
+    });
+
 });

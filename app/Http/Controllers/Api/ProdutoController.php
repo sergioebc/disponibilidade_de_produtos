@@ -51,9 +51,22 @@ class ProdutoController extends Controller
 
     public function store(ProdutoRequest $request)
     {
+        $imagens = $request->file('imagens');
+        $produtoData = $request->all();
+
         try {
-            $produtoData = $request->all();
             $produto = $this->produto->create($produtoData);
+
+            if($imagens) {
+                $imagesUploaded = [];
+
+                foreach ($imagens as $imagem) {
+                    $path = $imagem->store('imagens', 'public');
+                    $imagesUploaded[] = ['imagem' => $path, 'is_thum' => false];
+                }
+
+                $produto->imagens()->createMany($imagesUploaded);
+            }
 
             $data = ['data' => $produto];
             return response()->json($data, 201);
@@ -67,10 +80,23 @@ class ProdutoController extends Controller
 
     public function update(ProdutoRequest $request, $id)
     {
+        $imagens = $request->file('imagens');
+        $produtoData = $request->all();
+
         try {
-            $produtoData = $request->all();
             $produto     = $this->produto->findOrFail($id);
             $produto->update($produtoData);
+
+            if($imagens) {
+                $imagesUploaded = [];
+
+                foreach ($imagens as $imagem) {
+                    $path = $imagem->store('imagens', 'public');
+                    $imagesUploaded[] = ['imagem' => $path, 'is_thum' => false];
+                }
+
+                $produto->imagens()->createMany($imagesUploaded);
+            }
 
             $data = ['data' => $produto];
             return response()->json($data, 201);

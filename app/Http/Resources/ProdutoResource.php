@@ -6,6 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProdutoResource extends JsonResource
 {
+
     /**
      * Transform the resource into an array.
      *
@@ -17,8 +18,10 @@ class ProdutoResource extends JsonResource
         return [
             'nome' => $this->nome,
             'codigo_de_barras' => $this->codigo_de_barras,
-            'descricao' => $this->descricao
+            'descricao' => $this->descricao,
+            'imagens' => ImagemResource::collection($this->imagens),
         ];
+
         // return all attributes
         // return $this->resource->toArray();
     }

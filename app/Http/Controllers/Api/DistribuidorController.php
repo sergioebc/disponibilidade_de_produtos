@@ -97,19 +97,17 @@ class DistribuidorController extends Controller
     public function store_produtos(Request $request, $id)
     {
         $data = $request->all();
+        $dataAsync = array();
         try {
             $distribuidor = $this->distribuidor->findOrFail($id);
 
             foreach ($data as $key => &$value) {
-                $value['distribuidor_id'] = $id;
+                $dataAsync[$value['produto_id']] = ['em_estoque' => $value['em_estoque'], 'preco' => $value['preco']];
             }
-
 
             if (count($data)) {
-                $distribuidor->produtos()->sync($data);
+                $distribuidor->produtos()->syncWithoutDetaching($dataAsync);
             }
-
-            // return response()->json([$distribuidor->produtos]);
 
             return response()->json([
                 'data' => [
@@ -122,6 +120,21 @@ class DistribuidorController extends Controller
                 return response()->json(ApiError::errorMessage($e->getMessage(), 5000), 500);
             }
             return response()->json(ApiError::errorMessage('Houve um erro ao tentar salvar os produtos do distribuidor', 5000),  500);
+        }
+    }
+
+    public function show_produtos($id)
+    {
+        try {
+            $distribuidor = $this->distribuidor->findOrFail($id);
+
+            return response()->json($distribuidor->produtos()->paginate());
+
+        } catch (\Exception $e) {
+            if (config('app.debug')) {
+                return response()->json(ApiError::errorMessage($e->getMessage(), 5000), 500);
+            }
+            return response()->json(ApiError::errorMessage('Houve um erro ao tentar recuperar os produtos do distribuidor', 5000),  500);
         }
     }
 

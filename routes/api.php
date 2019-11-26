@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,7 @@ Route::namespace('API')->name('api.')->group(function(){
 		Route::put('/{id}', 'DistribuidorController@update')->name('update_distribuidores');
         Route::delete('/{id}', 'DistribuidorController@delete')->name('delete_distribuidores');
 
+        Route::get('/{id}/produtos', 'DistribuidorController@show_produtos')->name('show_distribuidores_produtos');
         Route::post('/{id}/produtos', 'DistribuidorController@store_produtos')->name('store_distribuidores_produtos');
     });
 

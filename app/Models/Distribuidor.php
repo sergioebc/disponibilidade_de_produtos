@@ -4,6 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static paginate()
+ * @method find($id)
+ * @method create(array $distribuidorData)
+ * @method findOrFail($id)
+ */
 class Distribuidor extends Model
 {
     protected $fillable = [
@@ -12,7 +18,16 @@ class Distribuidor extends Model
 
     public function produtos()
     {
-    	return $this->belongsToMany(Produto::class, 'produto_distribuidor');
+    	return $this->belongsToMany(Produto::class, 'produto_distribuidor')
+            ->as('extra')
+            ->withPivot('preco', 'em_estoque');
+    }
+
+    public function produtosEmEstoque()
+    {
+        return $this->belongsToMany(Produto::class, 'produto_distribuidor')
+            ->as('extra')
+            ->wherePivot('em_estoque', true)
+            ->withPivot('preco', 'em_estoque');
     }
 }
-

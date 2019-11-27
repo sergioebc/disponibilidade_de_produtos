@@ -24,6 +24,9 @@ class UserController extends Controller
      */
     public function index()
     {
+
+        auth('api')->user()->authorizeRoles(['admin']);
+
 	    $users = $this->user->paginate('10');
 
 	    return response()->json($users, 200);
@@ -36,6 +39,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        auth('api')->user()->authorizeRoles(['admin']);
+
         $userData = $request->all();
 
         if (!$request->has('password') || !$request->get('password')) {
@@ -49,8 +54,12 @@ class UserController extends Controller
         ])->validate();
 
         try {
+            $role_admin = Role::where('name', 'admin')->first();
+
             $userData['password'] = bcrypt($userData['password']);
             $user = $this->user->create($userData);
+            $user->roles()->attach($role_admin);
+
             $user =  $user->distribuidor()->create(
                 [
                     'razao_social' => $userData['razao_social'],
@@ -77,10 +86,23 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = $this->user->with( 'distribuidor')->findOrFail($id);
+        $userLogin = auth('api')->user();
+        $user = null;
 
-        if (!$user) return response()->json(ApiError::errorMessage('User não encontrado!', 4040), 404);
+        $userLogin->authorizeRoles(['admin', 'vendedor']);
 
+        try {
+            $user = $this->user->with( 'distribuidor')->findOrFail($id);
+        } catch (\Exception $e) {
+            if (config('app.debug')) {
+                return response()->json(ApiError::errorMessage($e->getMessage(), 5000),  500);
+            }
+            return response()->json(ApiError::errorMessage('User não encontrado!', 4040), 404);
+        }
+
+        if ( ($userLogin->Roles[0]->name == 'vendedor') && !($userLogin->id == $id) ) {
+            return response()->json(ApiError::errorMessage('Você não tem acesso a este usuário', 401), 401);
+        }
         return response()->json($user, 200);
     }
 
@@ -95,6 +117,25 @@ class UserController extends Controller
     {
         $userData = $request->all();
 
+        $userLogin = auth('api')->user();
+        $user = null;
+
+        $userLogin->authorizeRoles(['admin', 'vendedor']);
+
+        if ( ($userLogin->Roles[0]->name == 'vendedor') && !($userLogin->id == $id) ) {
+            return response()->json(ApiError::errorMessage('Você não tem acesso a este usuário', 401), 401);
+        }
+
+        try {
+            $user = $this->user->findOrFail($id);
+
+        } catch (\Exception $e) {
+            if (config('app.debug')) {
+                return response()->json(ApiError::errorMessage($e->getMessage(), 5000),  500);
+            }
+            return response()->json(ApiError::errorMessage('User não encontrado!', 4040), 404);
+        }
+
         if ($request->has('password') || $request->get('password')) {
             $userData['password'] = bcrypt($userData['password']);
         } else {
@@ -102,11 +143,10 @@ class UserController extends Controller
         }
 
         try {
-            $user     = $this->user->findOrFail($id);
             $user->update($userData);
-
             $data = ['data' => $user];
             return response()->json($data, 201);
+
         } catch (\Exception $e) {
             if (config('app.debug')) {
                 return response()->json(ApiError::errorMessage($e->getMessage(), 5000),  500);
@@ -123,6 +163,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+
+        auth('api')->user()->authorizeRoles(['admin']);
+
         try {
             $user = $this->user->find($id);
 
